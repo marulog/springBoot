@@ -15,20 +15,8 @@ import java.util.List;
 @Transactional(readOnly = true)
 @RequiredArgsConstructor // final이 있는 필드를 가지고 생성자를 만들어줌
 public class MemberService {
-    // 필드로 의존성 주입
-//    @Autowired
+
     private final MemberRepository memberRepository;
-
-    // setter로 의존성 주입
-//    @Autowired
-//    public void setMemberRepository(MemberRepository memberRepository) {
-//        this.memberRepository = memberRepository;
-//    }
-
-    // 생성자를 통한 의존성 주입
-//    public MemberService(MemberRepository memberRepository) {
-//        this.memberRepository = memberRepository;
-//    }
 
     /*
      *회원가입
@@ -41,7 +29,7 @@ public class MemberService {
     }
 
     private void validateDuplicateMember(Member member) {
-        List<Member> findMembers = memberRepository.findByName(member.getUsername());
+        List<Member> findMembers = memberRepository.findByName(member.getName());
         if(!findMembers.isEmpty()){
             throw new IllegalStateException("이미 존재하는 회원입니다.");
         }

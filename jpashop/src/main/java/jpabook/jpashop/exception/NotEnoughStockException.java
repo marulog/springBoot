@@ -14,4 +14,6 @@ public class NotEnoughStockException extends RuntimeException {
         super(cause);
     }
 
+    public NotEnoughStockException(String needMoreStock) {
+    }
 }

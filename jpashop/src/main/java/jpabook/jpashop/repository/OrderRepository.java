@@ -1,9 +1,11 @@
 package jpabook.jpashop.repository;
 
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.TypedQuery;
 import jpabook.jpashop.domain.Order;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
+import org.springframework.util.StringUtils;
 
 import java.util.List;
 
@@ -24,15 +26,44 @@ public class OrderRepository {
     //검색 기능은 복잡한 동적 쿼리로 처리해야됨 -> QuertDSL
     public List<Order> finaAll(OrderSearch orderSearch){
 
-
-
         String jpql = "select o from Order o join o.member m";
+        boolean isFirstCondition = true;
 
-        return em.createQuery(jpql, Order.class)
-                .setMaxResults(1000) // 최대 1000건 조회
-                .getResultList();
+        // 주문 상태 검색
+        if (orderSearch.getOrderStatus() != null) {
+            if (isFirstCondition) {
+                jpql += " where";
+                isFirstCondition = false;
+            } else {
+                jpql += " and";
+            }
+            jpql += " o.status = :status";
+        }
+
+        // 회원 이름 검색
+        if (StringUtils.hasText(orderSearch.getMemberName())) {
+            if (isFirstCondition) {
+                jpql += " where";
+                isFirstCondition = false;
+            } else {
+                jpql += " and";
+            }
+            jpql += " m.name like :name";
+        }
+
+        // JPQL 실행
+        TypedQuery<Order> query = em.createQuery(jpql, Order.class)
+                .setMaxResults(1000);
+
+        if (orderSearch.getOrderStatus() != null) {
+            query = query.setParameter("status", orderSearch.getOrderStatus());
+        }
+        if (StringUtils.hasText(orderSearch.getMemberName())) {
+            query = query.setParameter("name", orderSearch.getMemberName());
+        }
+
+        return query.getResultList();
     }
-
     /**
      * JPA Criteria -> 사용안함 ㅅㄱ
      */

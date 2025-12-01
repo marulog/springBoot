@@ -1,7 +1,7 @@
 package jpabook.jpashop.service;
 
 import jpabook.jpashop.domain.Member;
-import jpabook.jpashop.repository.MemberRepository;
+import jpabook.jpashop.repository.MemberRepositoryOld;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -11,15 +11,13 @@ import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.transaction.annotation.Transactional;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 @ExtendWith(SpringExtension.class) // test 실행 할 때  스프링과 연동하여 실행
 @SpringBootTest // 스프링부트를 띄운 상태로 테스트를 돌리고 싶다
 @Transactional // test환경에서는 테스트 끝나면 롤백 처리
 class MemberServiceTest {
 
     @Autowired private MemberService memberService;
-    @Autowired private MemberRepository memberRepository;
+    @Autowired private MemberRepositoryOld memberRepository;
 
     @Test
     @Rollback(value = false)
